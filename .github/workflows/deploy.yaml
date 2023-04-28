@@ -6,14 +6,14 @@ on:
       - master
 
 env:
-  S3_BUCKET_NAME: bucketname
+  S3_BUCKET_NAME: chatting-bucket
   RESOURCE_PATH: ./src/main/resources/application.yml
-  CODE_DEPLOY_APPLICATION_NAME: cdname
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: groupname
+  CODE_DEPLOY_APPLICATION_NAME: chatting-code
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: chatting-server
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
@@ -25,14 +25,14 @@ jobs:
           java-version: 17
         
         # [1]
-      - name: Set yaml file 
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: ${{ env.RESOURCE_PATH }} 
-        env:
-          spring.datasource.url: ${{secrets.DB_URL}}        
-          spring.datasource.username: ${{secrets.DB_USERNAME}}
-          spring.datasource.password: ${{secrets.DB_PASSWORD}}
+#       - name: Set yaml file 
+#         uses: microsoft/variable-substitution@v1
+#         with:
+#           files: ${{ env.RESOURCE_PATH }} 
+#         env:
+#           spring.datasource.url: ${{secrets.DB_URL}}        
+#           spring.datasource.username: ${{secrets.DB_USERNAME}}
+#           spring.datasource.password: ${{secrets.DB_PASSWORD}}
 #           jwt.secret: ${{secrets.JWT_SECRET}}
 #           jwt.token-validity-in-seconds: ${{secrets.JWT_TOKEN_VALIDITY}}
 
