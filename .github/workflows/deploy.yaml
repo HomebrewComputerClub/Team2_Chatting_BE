@@ -3,7 +3,7 @@ name: CI-CD
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   S3_BUCKET_NAME: chatting-bucket
