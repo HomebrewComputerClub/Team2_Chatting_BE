@@ -17,6 +17,6 @@ public class TestController {
     }
     @GetMapping("/hello")
     public String newHelloTest(){
-        return "new hello..";
+        return "new hello!!";
     }
 }
