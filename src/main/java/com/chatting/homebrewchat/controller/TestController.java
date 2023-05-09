@@ -15,4 +15,8 @@ public class TestController {
     public String stringTest(){
         return "Hello, world! halo";
     }
+    @GetMapping("/hello")
+    public String stringTest(){
+        return "new hello..";
+    }
 }
