@@ -13,6 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @GetMapping("/stringTest")
     public String stringTest(){
-        return "Hello, world!";
+        return "Hello, world! halo";
     }
 }
