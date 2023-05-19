@@ -21,4 +21,9 @@ public class TestController {
         log.info("헬로헬로");
         return "new hello!!";
     }
+    @GetMapping("/api/hi")
+    public String hihi(){
+        log.info("hi called");
+        return "hi hihihihihi";
+    }
 }
