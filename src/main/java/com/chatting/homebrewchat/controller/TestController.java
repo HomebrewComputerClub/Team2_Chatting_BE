@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @GetMapping("/stringTest")
     public String stringTest(){
+        log.info("string Test Called!");
         return "Hello, world! halo";
     }
     @GetMapping("/hello")
     public String newHelloTest(){
+        log.info("헬로헬로");
         return "new hello!!";
     }
 }
