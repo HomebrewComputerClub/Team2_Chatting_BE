@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/test")
+@RequestMapping("/api")
 public class TestController {
     @GetMapping("/stringTest")
     public String stringTest(){
@@ -21,7 +21,7 @@ public class TestController {
         log.info("헬로헬로");
         return "new hello!!";
     }
-    @GetMapping("/api/hi")
+    @GetMapping("/hi")
     public String hihi(){
         log.info("hi called");
         return "hi hihihihihi";

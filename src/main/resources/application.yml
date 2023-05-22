@@ -11,7 +11,7 @@ spring:
     driver-class: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       default-batch-size: 200
     show-sql: true
 #jwt:
