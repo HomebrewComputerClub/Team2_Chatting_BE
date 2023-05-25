@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MessageDto {
+public class DirectMessageDto {
 
-    private MessageType type;
     //채팅방 ID
     private String roomId;
+    private String messageId;
     //보내는 사람
-    private String sender;
+    private String senderName;
     private String detail;
 }

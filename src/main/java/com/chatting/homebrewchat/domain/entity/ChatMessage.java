@@ -1,11 +1,10 @@
 package com.chatting.homebrewchat.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +26,18 @@ public class ChatMessage {
 
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ChatRoom room;
-    //TODO: 회원 ManyToOne
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Member sender;
+    @Builder(builderMethodName = "init")
+    public ChatMessage(String text, ChatRoom room, Member sender){
+        this.text=text;
+        this.room=room;
+        this.sender=sender;
+        this.time=LocalDateTime.now();
+    }
+
 }

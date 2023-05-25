@@ -16,10 +16,10 @@ public class CustomStompInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         log.info("Got Msg,,"+message);
-//        if(accessor.getCommand() == StompCommand.CONNECT) {
+        if(accessor.getCommand() == StompCommand.CONNECT) {
 //            if(!tokenProvider.validateToken(accessor.getFirstNativeHeader("Authorization")))
 //                throw new AccessDeniedException("");
-//        }
+        }
         return message;
     }
 }
