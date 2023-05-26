@@ -35,7 +35,7 @@ public class MessageController {
     }
     @GetMapping("/api/getRoomList/direct")
     @Operation(summary = "자신의 1대1 채팅방 목록 조회", description = "1대1 채팅방 목록을 조히(인증 도입 후엔 memberId를 받지 않는다.)")
-    public ResponseEntity<ChatDto.roomListRes> getMyRoom(@RequestBody String memberId){
+    public ResponseEntity<ChatDto.roomListRes> getMyRoom(@RequestBody Long memberId){
         return new ResponseEntity<>(chatService.getMyRoomList(memberId),HttpStatus.OK);
     }
     @GetMapping("/api/getChatList/{roomId}")
