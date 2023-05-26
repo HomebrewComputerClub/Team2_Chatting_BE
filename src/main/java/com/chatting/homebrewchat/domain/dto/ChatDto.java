@@ -11,8 +11,8 @@ public class ChatDto {
     @Data
     @Builder
     public static class makeRoomReq{
-        private String myMemberId;
-        private String targetMemberId;
+        private Long myMemberId;
+        private Long targetMemberId;
     }
     @Data
     @Builder

@@ -16,7 +16,7 @@ spring:
       ddl-auto: create-drop
       dialect : org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
-#jwt:
-#  header: Authorization
-#  secret: c2lsdmVyfakefakefakefakefakefakefakefakefakefakefakefakefakefakefakeib290LWp3fakefakefakefakefake
-#  token-validity-in-seconds: 86400
+jwt:
+  header: Authorization
+  secretKey: c2lsdmVyfakefakefakefakefakefakefakefakefakefakefakefakefakefakefakeib290LWp3fakefakefakefakefake
+  refreshKey: c2lsdmVyfakefakefakefakefakefakefakefakefakefakefakefakefakefakefakeib290LWp3fakefakefakefakefake

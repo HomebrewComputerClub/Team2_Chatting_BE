@@ -14,10 +14,10 @@ spring:
       ddl-auto: create
       default-batch-size: 200
     show-sql: true
-#jwt:
-#  header: Authorization
-#  secret: ${jwt.secret}
-#  token-validity-in-seconds: ${jwt.token.validity}
+jwt:
+  header: Authorization
+  secretKey: ${jwt.secret}
+  refreshKey: ${jwt.secret}
 
 
 
