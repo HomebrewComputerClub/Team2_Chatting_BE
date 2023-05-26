@@ -12,7 +12,7 @@ public class webConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry){
         registry.addMapping("/**")
         //-> CORS를 적용할 URL 패턴을 지정합니다. 여기에서는 "/**" 패턴을 사용하여 모든 URL에 대해 적용하도록 설정합니다.
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("/*")
 //                .allowedOrigins("http://localhost:8000")
                 .allowedMethods("GET","POST","PATCH","DELETE","PUT","OPTIONS") // *로 지정해도 상관없을 듯.
                 .allowCredentials(true);
