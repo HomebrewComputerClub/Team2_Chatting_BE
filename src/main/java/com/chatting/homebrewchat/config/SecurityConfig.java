@@ -52,9 +52,9 @@ public class SecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
         // Preflight 요청은 허용한다. https://velog.io/@jijang/%EC%82%AC%EC%A0%84-%EC%9A%94%EC%B2%AD-Preflight-request
 
-                .requestMatchers("/members/signup", "/members/login", "/members/refreshToken","/members/logout").permitAll()
-                .requestMatchers("/manager/**").hasRole("ADMIN")
-                //.requestMatchers("/manager로 시작하는 url") ADMIN 이 주어졌을 때 접근 허용 및 hasAnyRole 필요
+                .requestMatchers("/api/members/signup", "/api/members/login", "/api/members/refreshToken","/api/members/logout").permitAll()
+                .requestMatchers("/api/manager/**").hasRole("ADMIN")
+                //.requestMatchers("/api/manager로 시작하는 url") ADMIN 이 주어졌을 때 접근 허용 및 hasAnyRole 필요
                 .anyRequest().authenticated()
 
                 .and()
