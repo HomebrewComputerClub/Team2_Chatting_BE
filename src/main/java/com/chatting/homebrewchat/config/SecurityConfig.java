@@ -55,6 +55,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/members/signup", "/api/members/login", "/api/members/refreshToken","/api/members/logout").permitAll()
                 .requestMatchers("/api/manager/**").hasRole("ADMIN")
                 //.requestMatchers("/api/manager로 시작하는 url") ADMIN 이 주어졌을 때 접근 허용 및 hasAnyRole 필요
+                .requestMatchers("/api/ws").permitAll()
+                .requestMatchers("/api/chat").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
