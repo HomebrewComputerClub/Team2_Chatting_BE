@@ -26,7 +26,8 @@ public class MessageController {
         log.info("Got Message:"+message);
         chatService.saveChatMessage(message);
         message.setDetail(message.getDetail()+", 서버에서 확인");
-        sendingOperations.convertAndSend("/direct/room/"+message.getRoomId(),message);
+//        sendingOperations.convertAndSend("/direct/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/direct/room/2023",message);
     }
     @PostMapping("/api/getRoomId/direct")
     @Operation(summary = "1대1 채팅방 생성(임시)", description = "(원래) 1대1 대화를 하고싶은 상대방의 memberId로 해당 유저와의 채팅방 id를 얻는다.")
