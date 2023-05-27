@@ -24,7 +24,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration source = new CorsConfiguration();
         source.setAllowCredentials(false); //쿠키 받을 것 인지 설정
-        source.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://localhost:3000","http://localhost:8080"));
+        source.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://localhost:3000","http://localhost:8080","http://172.30.1.3:3000"));
         source.setAllowedMethods(Arrays.asList("GET"));
         source.addAllowedMethod("POST");
         source.addAllowedMethod("PUT");
