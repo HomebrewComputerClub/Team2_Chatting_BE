@@ -27,7 +27,7 @@ public class ChatService {
     private final RoomRepository roomRepository;
     private final MessageRepository messageRepository;
 
-    private Member getMember(String id){
+    private Member getMember(Long id){
         return memberRepository.findById(id).orElseThrow(()->new RuntimeException("no mem"));
     }
     @Transactional
@@ -56,7 +56,7 @@ public class ChatService {
         roomRepository.save(build);
         return build.getId();
     }
-    public ChatDto.roomListRes getMyRoomList(String memberId){
+    public ChatDto.roomListRes getMyRoomList(Long memberId){
         Member me=getMember(memberId);
         List<ChatRoom> byMemberA = roomRepository.findByMemberA(me);
         List<ChatRoom> byMemberB = roomRepository.findByMemberB(me);
