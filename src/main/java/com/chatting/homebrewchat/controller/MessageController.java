@@ -24,9 +24,10 @@ public class MessageController {
     @MessageMapping("/message/send/direct")
     public void sendMessage(DirectMessageDto message){
         log.info("Got Message:"+message);
-        chatService.saveChatMessage(message);
+//        chatService.saveChatMessage(message);
         message.setDetail(message.getDetail()+", 서버에서 확인");
-        sendingOperations.convertAndSend("/direct/room/"+message.getRoomId(),message);
+//        sendingOperations.convertAndSend("/direct/room/"+message.getRoomId(),message);
+        sendingOperations.convertAndSend("/direct/room/2023",message);
     }
 
     @PostMapping("/api/getRoomId/direct")
@@ -34,12 +35,12 @@ public class MessageController {
     public ResponseEntity<String> makeDirectRoom(@RequestBody ChatDto.makeRoomReq req){
         return new ResponseEntity<>(chatService.getDirectRoomId(req), HttpStatus.OK);
     }
-    @GetMapping("/api/getRoomList/direct")
+    @GetMapping("/api/chat/getRoomList/direct")
     @Operation(summary = "자신의 1대1 채팅방 목록 조회", description = "1대1 채팅방 목록을 조히(인증 도입 후엔 memberId를 받지 않는다.)")
     public ResponseEntity<ChatDto.roomListRes> getMyRoom(@RequestBody Long memberId){
         return new ResponseEntity<>(chatService.getMyRoomList(memberId),HttpStatus.OK);
     }
-    @GetMapping("/api/getChatList/{roomId}")
+    @GetMapping("/api/chat/getChatList/{roomId}")
     @Operation(summary = "이전 채팅 기록 조회", description = "1대1 채팅방의 이전 채팅 기록을 조회하는 API")
     public ResponseEntity<List<DirectMessageDto>> getChatList(@PathVariable String roomId){
         return new ResponseEntity<>(chatService.getDirectMessageList(roomId),HttpStatus.OK);

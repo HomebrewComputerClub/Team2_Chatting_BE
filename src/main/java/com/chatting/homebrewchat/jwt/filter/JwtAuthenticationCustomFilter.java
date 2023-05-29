@@ -85,7 +85,7 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
                             .setAuthentication(token); // 현재 요청에서 언제든지 인증정보를 꺼낼 수 있도록 해준다.
                     log.info("SecurityContextHolder" + SecurityContextHolder.getContext());
 
-                if( !requestURI.equals("/members/logout") ){
+                if( !requestURI.equals("/api/members/logout") ){
                     // Filter에서는 바로 헤더의 Authorization의 Bearer 뒤에 AccessToken 보내기
                     response.setHeader("Authorization","Bearer "+ReissuedAccessToken);
                     log.info("ReissuedAccessToken : " + ReissuedAccessToken);
