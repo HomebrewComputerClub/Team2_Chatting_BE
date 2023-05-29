@@ -2,6 +2,7 @@ package com.chatting.homebrewchat.config;
 
 import com.chatting.homebrewchat.jwt.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.cors.CorsUtils;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -24,7 +26,6 @@ public class SecurityConfig {
     // ManagerConfig 가 Manager 역할을 할 수 있게끔하고,
     // EntryPoint 가 에러가 일어났을 때, 어떤 것들을 할 수 있는지를 정해주도록 하기 위해서
     // -> 기본적인 세팅으로, 외워야 할 것들이 아닌 기본적인 방법들? 이라고 생각하면 될 듯
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -48,24 +49,34 @@ public class SecurityConfig {
 
                 // 접근 권한 설정 (pre-flight, cors설정)
                 .and()
-                .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .authorizeRequests((authz) -> authz
+                        .requestMatchers("/api/members/signup").permitAll()
+                        .requestMatchers("/api/members/login", "/api/members/refreshToken","/api/members/logout","/api/index.html","/api/error","/").permitAll()
+                        .requestMatchers("/api/manager/**").hasRole("ADMIN")
+                        .requestMatchers("/api/ws").permitAll()
+                        .requestMatchers("/api/chat").permitAll()
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .anyRequest().authenticated()
+                )
+
+                //.requestMatchers("/manager로 시작하는 url") ADMIN 이 주어졌을 때 접근 허용 및 hasAnyRole 필요
+
                 // Preflight 요청은 허용한다. https://velog.io/@jijang/%EC%82%AC%EC%A0%84-%EC%9A%94%EC%B2%AD-Preflight-request
-
-                .requestMatchers("/api/members/signup", "/api/members/login", "/api/members/refreshToken","/api/members/logout").permitAll()
-                .requestMatchers("/api/manager/**").hasRole("ADMIN")
-                //.requestMatchers("/api/manager로 시작하는 url") ADMIN 이 주어졌을 때 접근 허용 및 hasAnyRole 필요
-                .requestMatchers("/api/ws").permitAll()
-                .requestMatchers("/api/chat").permitAll()
-                .anyRequest().authenticated()
-
-                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 // -> 인증되지 않은 사용자에 대한 접근처리
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 // -> 인증되었으나, 권한이 없는 사용자에 대한 처리
+
+                //-----------Oauth---------
                 .and()
+//                .oauth2Login()
+//                .authorizationRequestRepository(cookieAuthorizationRequestRepository)
+//                .and()
+//                .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 Handler 설정 , 여기선 안함
+//                .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러 설정
+//                .userInfoEndpoint().userService(customOAuth2UserService)// customUserService 설정
+//                .and()
                 .build();
     }
 

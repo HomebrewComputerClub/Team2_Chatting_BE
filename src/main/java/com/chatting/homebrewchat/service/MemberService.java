@@ -1,13 +1,12 @@
 package com.chatting.homebrewchat.service;
 
-
 import com.chatting.homebrewchat.domain.entity.Member;
 import com.chatting.homebrewchat.jwt.util.RedisUtil;
 import com.chatting.homebrewchat.repository.MemberRepository;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,11 +47,19 @@ public class MemberService {
 
     @Transactional
     public void setCookieRefreshToken(HttpServletResponse response, String refreshToken){
-        Cookie cookie = new Cookie("RefreshToken",refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
+//        Cookie cookie = new Cookie("RefreshToken",refreshToken);
+//        cookie.setHttpOnly(true);
+//        cookie.setPath("/");
 //        cookie.setSecure(true); //-> https에서만 가능하게
-        response.addCookie(cookie);
+//        response.addCookie(cookie);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("RefreshToken", refreshToken)
+                .path("/")
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .build();
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
+
     }
 
     @Transactional
@@ -64,8 +71,19 @@ public class MemberService {
 
     @Transactional
     public void setExpireCookie(HttpServletResponse response,String name) {
-        Cookie cookie=new Cookie(name, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+//        Cookie cookie=new Cookie(name, null);
+//        cookie.setMaxAge(0);
+//        cookie.setSecure(true); //-> https에서만 가능하게
+//        cookie.setHttpOnly(true);
+//        cookie.setPath("/");
+//        response.addCookie(cookie);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from(name, null)
+                .path("/")
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(0)
+                .build();
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
     }
 }

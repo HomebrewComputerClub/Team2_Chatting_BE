@@ -9,11 +9,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -37,15 +37,19 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("새로운 필터 시작");
         String accessTokenString = resolveToken(request);
+        String refreshTokenString = provider.getRefreshToken(request);
         String requestURI = request.getRequestURI();
 
-        if (accessTokenString != null){
+        if (refreshTokenString != null){
             try{
-                Claims claimsAccess = provider.getClaimsAccessToken(accessTokenString);
-                log.info("accessToken 만료 안됨");
-                log.info("claimsAccess : " + claimsAccess);
-                // secretkey 불일치 시, SignatureException 발생
-                // 토큰 기한 만료 시, ExpiredJwtException
+                if(accessTokenString == null){
+                    throw new IOException();
+                } else {
+                    Claims claimsAccess = provider.getClaimsAccessToken(accessTokenString);
+                    log.info("accessToken 만료 안됨");
+                    log.info("claimsAccess : " + claimsAccess);
+                    // secretkey 불일치 시, SignatureException 발생
+                    // 토큰 기한 만료 시, ExpiredJwtException
 
                     UsernamePasswordAuthenticationToken token = provider.getAuthenticationToken(claimsAccess);
                     // -> Manager.authenticate 기능을 모두 수행해버려서 authenticate 필요없음
@@ -56,12 +60,11 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext()
                             .setAuthentication(token); // 현재 요청에서 언제든지 인증정보를 꺼낼 수 있도록 해준다.
                     log.info("SecurityContextHolder" + SecurityContextHolder.getContext());
+                }
+            }catch (ExpiredJwtException | IOException e){
 
-            }catch (ExpiredJwtException e){
-
-                log.info("Access토큰 만료 후");
+                log.info("Access토큰 만료 혹은, Access 토큰이 없고 RefreshToken 이 있는 경우");
                 // 쿠키의 "RefreshToken" 으로부터 RefreshToke 추출
-                String refreshTokenString = provider.getRefreshToken(request);
                 Claims claimsRefresh = provider.getClaimsRefreshToken(refreshTokenString);
                 log.info("claimsRefresh : " + claimsRefresh);
                 // secretkey 인증 -> 실패 시 SignatureException
@@ -87,12 +90,20 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
                     response.setHeader("Authorization","Bearer "+ReissuedAccessToken);
                     log.info("ReissuedAccessToken : " + ReissuedAccessToken);
 
-                    // RefreshToken은 브라우저의 쿠키에 지정하여 보낸다.
-                    Cookie cookie = new Cookie("RefreshToken",ReissuedRefreshToken);
-                    cookie.setHttpOnly(true);
-                    cookie.setPath("/");
-                    // cookie.setSecure(true); //-> https에서만 가능하게
-                    response.addCookie(cookie);
+//                     RefreshToken은 브라우저의 쿠키에 지정하여 보낸다.
+//                    Cookie cookie = new Cookie("RefreshToken",ReissuedRefreshToken);
+//                    cookie.setHttpOnly(true);
+//                    cookie.setPath("/");
+//                    cookie.setSecure(true); //-> https에서만 가능하게
+//                    response.addCookie(cookie);
+
+                    ResponseCookie refreshTokenCookie = ResponseCookie.from("RefreshToken", ReissuedRefreshToken)
+                            .path("/")
+                            .sameSite("None")
+                            .httpOnly(false)
+                            .secure(true)
+                            .build();
+                    response.addHeader("Set-Cookie", refreshTokenCookie.toString());
                 }
             }
         }
