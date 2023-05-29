@@ -1,6 +1,5 @@
 package com.chatting.homebrewchat.controller;
 
-
 import com.chatting.homebrewchat.domain.dto.Login.MemberLoginDto;
 import com.chatting.homebrewchat.domain.dto.Login.MemberLoginResponseDto;
 import com.chatting.homebrewchat.domain.dto.Signup.MemberSignupDto;
@@ -28,10 +27,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
@@ -43,7 +39,7 @@ public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
-    private final com.chatting.homebrewchat.jwt.UserDetailsToken.DetailsService DetailsService;
+    private final DetailsService DetailsService;
     private final RedisUtil redisUtil;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     @PostMapping("/signup")
@@ -64,6 +60,9 @@ public class MemberController {
         member.setName(memberSignupDto.getName());
         member.setEmail(memberSignupDto.getEmail());
         member.setPassword(passwordEncoder.encode(memberSignupDto.getPassword()));
+        if(memberSignupDto.getPic() != null){
+            member.setPic(memberSignupDto.getPic());
+        }
         member.setRole(Role.ADMIN);
 
         Member saveMember = memberService.addMember(member);
@@ -81,8 +80,8 @@ public class MemberController {
         memberSignupResponseDto.setRegdate(saveMember.getRegdate());
 
         // 회원가입
-        return new ResponseEntity(memberSignupResponseDto, HttpStatus.OK);
-
+        return new ResponseEntity(HttpStatus.OK);
+//memberSignupResponseDto,
 
     }
 
@@ -155,12 +154,13 @@ public class MemberController {
 
         log.info(loginResponse.getAccessToken());
 
-        return new ResponseEntity( loginResponse, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity( httpHeaders, HttpStatus.OK);
 //        return new ResponseEntity<>(accessToken, httpHeaders, HttpStatus.OK);
         // 헤더에 acceessToken, 쿠키에 ResponseToken 담아서, body에는 테스트용
+//        loginResponse,
     }
 
-    @PostMapping("/loginremain")
+    @GetMapping("/loginremain")
     public void loginremain(HttpServletRequest request, HttpServletResponse response){
 
         return;
@@ -175,23 +175,26 @@ public class MemberController {
 
         // 인증객체로부터 Id 추출
         Authentication authentication = securityContext.getAuthentication();
-//        if(authentication != null){
-            Details userDetails = (Details) authentication.getPrincipal();
-            String memberId = String.valueOf(userDetails.getMember().getMemberId());
-            log.info(memberId);
+        if(authentication != null){
+            try{
+                Details userDetails = (Details) authentication.getPrincipal();
+                String memberId = String.valueOf(userDetails.getMember().getMemberId());
+                log.info(memberId);
 
-            // Id와 일치하는 DB(redis)에 존재하는 key 삭제
-            memberService.checkAndDeleteRefresh(memberId);
-            // 찾지 못할 시, RuntimeException 발생
+                // Id와 일치하는 DB(redis)에 존재하는 key 삭제
+                memberService.checkAndDeleteRefresh(memberId);
+                // 찾지 못할 시, RuntimeException 발생
 
-            // 클라이언트에 만료된 쿠키 전달 -> 쿠키삭제
-            memberService.setExpireCookie(response,"RefreshToken");
-            log.info(memberId);
-
+                // 클라이언트에 만료된 쿠키 전달 -> 쿠키삭제
+                memberService.setExpireCookie(response,"RefreshToken");
+                log.info(memberId);
+            } catch (ClassCastException e){
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
             // 리다이렉트 시킴으로써 private변수의 AccessToken 없애기
 //            String redirect_uri="http://www.google.com";
 //            response.sendRedirect(redirect_uri);
-//        }
+        }
 
         // 인증객체를 없애기 => SecurityContext 를 clear()
         // 사실 웹 어플리케이션에서는 stateless 로 이루어지기 때문에 굳이 안해도 되는데 특수 상황에선 써야한다고 함.
@@ -199,7 +202,8 @@ public class MemberController {
         securityContext.setAuthentication(null);
         log.info(securityContext.toString());
         log.info(SecurityContextHolder.getContext().toString());
-        return new ResponseEntity("Logout Success", HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
+//        "Logout Success",
     }
 
 

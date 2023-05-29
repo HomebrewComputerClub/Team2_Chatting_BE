@@ -20,8 +20,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 //        response.sendRedirect("/login");
 
         // 자세한 에러를 보고 싶을 때 사용
-//        authException.printStackTrace();
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED); // 401에러
+        authException.printStackTrace();
+        response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE); // 일부러 생소한 에러 - 406에러
     }
 
     // 만료 에러, key 인증 에러

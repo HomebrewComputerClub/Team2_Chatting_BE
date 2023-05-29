@@ -1,4 +1,5 @@
 package com.chatting.homebrewchat.jwt.UserDetailsToken;
+
 import com.chatting.homebrewchat.domain.entity.Member;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,15 +8,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Getter
-public class Details implements UserDetails {
+public class Details implements UserDetails{ // , OAuth2User
 
     private Member member;
+    private Map<String, Object> attributes;
 
     public Details(Member member){
         this.member = member;
     }
+    public Details(Member member, Map<String, Object> attributes){
+        this.member = member;
+        this.attributes = attributes;
+    }
+//-----------------
+//    // OAtuh 상속 메서드
+//    @Override
+//    public <A> A getAttribute(String name) {
+////        return OAuth2User.super.getAttribute(name);
+//        return null;
+//    }
+//
+//
+//    @Override
+//    public String getName() {
+//        return null;
+//    }
+//-----------------
+
+    // 기본 UserDetail 상속 메서드
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,7 +81,6 @@ public class Details implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
 
 }

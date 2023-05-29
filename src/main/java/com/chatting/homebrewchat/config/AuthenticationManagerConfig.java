@@ -1,6 +1,5 @@
 package com.chatting.homebrewchat.config;
 
-
 import com.chatting.homebrewchat.jwt.filter.JwtAuthenticationCustomFilter;
 import com.chatting.homebrewchat.jwt.provider.JwtAuthenticationProvider;
 import lombok.RequiredArgsConstructor;

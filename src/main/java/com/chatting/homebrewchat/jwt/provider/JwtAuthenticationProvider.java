@@ -1,10 +1,8 @@
 package com.chatting.homebrewchat.jwt.provider;
 
-
 import com.chatting.homebrewchat.jwt.UserDetailsToken.Details;
 import com.chatting.homebrewchat.jwt.UserDetailsToken.DetailsService;
 import com.chatting.homebrewchat.jwt.util.RedisUtil;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -30,7 +28,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationProvider{
+public class JwtAuthenticationProvider {
 
     private final RedisUtil redisUtil;
 
@@ -61,6 +59,8 @@ public class JwtAuthenticationProvider{
 
         //토큰에 claims 추가 필요
         claims.put("memberID",userDetails.getMember().getMemberId());
+        claims.put("name",userDetails.getMember().getName());
+        claims.put("pic",userDetails.getMember().getPic());
 
         Date now = new Date();
         Date expiresIn = new Date(now.getTime() + expire_time);
