@@ -21,6 +21,15 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         // 자세한 에러를 보고 싶을 때 사용
         authException.printStackTrace();
+        
+        // 에러 내용 body에 출력
+        // -> 메시지를 클라이언트에게 전달하기 위한 응답 처리
+        String errorMessage = authException.getMessage();
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(errorMessage);
+        
+        
         response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE); // 일부러 생소한 에러 - 406에러
     }
 
