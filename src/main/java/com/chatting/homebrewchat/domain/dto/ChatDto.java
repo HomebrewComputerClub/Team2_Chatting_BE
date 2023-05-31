@@ -11,7 +11,6 @@ public class ChatDto {
     @Data
     @Builder
     public static class makeRoomReq{
-        private Long myMemberId;
         private Long targetMemberId;
     }
     @Data
@@ -19,6 +18,11 @@ public class ChatDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class roomListRes{
-        private List<String> roomId;
+        private String roomId;
+        private String targetName;
+        private Long targetMemberId;
+        private String targetImage;
+        private String lastContent;
+        private String lastSendTime;
     }
 }

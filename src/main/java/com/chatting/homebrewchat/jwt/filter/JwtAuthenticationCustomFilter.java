@@ -35,19 +35,18 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("새로운 필터 시작");
         String accessTokenString = resolveToken(request);
         String refreshTokenString = provider.getRefreshToken(request);
         String requestURI = request.getRequestURI();
-
+        log.info("Not URI:{}"+requestURI);
         if (refreshTokenString != null){
             try{
                 if(accessTokenString == null){
                     throw new IOException();
                 } else {
                     Claims claimsAccess = provider.getClaimsAccessToken(accessTokenString);
-                    log.info("accessToken 만료 안됨");
-                    log.info("claimsAccess : " + claimsAccess);
+//                    log.info("accessToken 만료 안됨");
+//                    log.info("claimsAccess : " + claimsAccess);
                     // secretkey 불일치 시, SignatureException 발생
                     // 토큰 기한 만료 시, ExpiredJwtException
 
@@ -59,14 +58,14 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
                     // 인증정보가 SecurityContextHolder 에 저장되게 됨
                     SecurityContextHolder.getContext()
                             .setAuthentication(token); // 현재 요청에서 언제든지 인증정보를 꺼낼 수 있도록 해준다.
-                    log.info("SecurityContextHolder" + SecurityContextHolder.getContext());
+//                    log.info("SecurityContextHolder" + SecurityContextHolder.getContext());
                 }
             }catch (ExpiredJwtException | IOException e){
 
                 log.info("Access토큰 만료 혹은, Access 토큰이 없고 RefreshToken 이 있는 경우");
                 // 쿠키의 "RefreshToken" 으로부터 RefreshToke 추출
                 Claims claimsRefresh = provider.getClaimsRefreshToken(refreshTokenString);
-                log.info("claimsRefresh : " + claimsRefresh);
+//                log.info("claimsRefresh : " + claimsRefresh);
                 // secretkey 인증 -> 실패 시 SignatureException
                 // 토큰 만료 인증 -> 실패 시 JwtException -> 다시 로그인 알림
 
@@ -83,12 +82,12 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
                     // 인증정보가 SecurityContextHolder 에 저장되게 됨
                     SecurityContextHolder.getContext()
                             .setAuthentication(token); // 현재 요청에서 언제든지 인증정보를 꺼낼 수 있도록 해준다.
-                    log.info("SecurityContextHolder" + SecurityContextHolder.getContext());
+//                    log.info("SecurityContextHolder" + SecurityContextHolder.getContext());
 
                 if( !requestURI.equals("/api/members/logout") ){
                     // Filter에서는 바로 헤더의 Authorization의 Bearer 뒤에 AccessToken 보내기
                     response.setHeader("Authorization","Bearer "+ReissuedAccessToken);
-                    log.info("ReissuedAccessToken : " + ReissuedAccessToken);
+//                    log.info("ReissuedAccessToken : " + ReissuedAccessToken);
 
 //                     RefreshToken은 브라우저의 쿠키에 지정하여 보낸다.
 //                    Cookie cookie = new Cookie("RefreshToken",ReissuedRefreshToken);

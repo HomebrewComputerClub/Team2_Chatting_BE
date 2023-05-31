@@ -67,7 +67,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/chat").permitAll()
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers("/api/hello").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
 
                 //.requestMatchers("/manager로 시작하는 url") ADMIN 이 주어졌을 때 접근 허용 및 hasAnyRole 필요

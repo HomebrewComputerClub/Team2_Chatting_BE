@@ -94,8 +94,10 @@ public class MemberService {
         List<MemberInterface> memberList = memberRepository.searchMemberContain(keyword);
         return memberList;
     }
-    public void getCurrentMember(){
+    public Member getCurrentMember(){
         String username = SecurityUtil.getCurrentUsername().orElseThrow(() -> new RuntimeException("Not Match username"));
         log.info("Got Username: "+username);
+        Member member = memberRepository.findByName(username).orElseThrow(() -> new RuntimeException("Cannot find member"));
+        return member;
     }
 }
