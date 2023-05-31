@@ -59,9 +59,7 @@ public class SecurityConfig {
 //                         .anyRequest().authenticated()
 //                 )
                 .authorizeRequests((authz) -> authz
-                        .requestMatchers("/api/members/signup").permitAll()
-                        .requestMatchers("/api/members/login", "/api/members/refreshToken","/api/members/logout","/api/index.html","/api/error","/").permitAll()
-                        .requestMatchers("/members/signup","/members/login", "/members/refreshToken","/members/logout","/index.html","/error","/").permitAll()
+                        .requestMatchers("/api/members/**").permitAll()
                         .requestMatchers("/api/manager/**").hasRole("ADMIN")
                         .requestMatchers("/api/ws").permitAll()
                         .requestMatchers("/api/chat").permitAll()
