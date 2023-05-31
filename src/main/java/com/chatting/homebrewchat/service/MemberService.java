@@ -1,19 +1,23 @@
 package com.chatting.homebrewchat.service;
 
+import com.chatting.homebrewchat.domain.dto.MemberInterface;
 import com.chatting.homebrewchat.domain.entity.Member;
 import com.chatting.homebrewchat.jwt.util.RedisUtil;
 import com.chatting.homebrewchat.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
     private final RedisUtil redisUtil;
@@ -85,5 +89,13 @@ public class MemberService {
                 .maxAge(0)
                 .build();
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
+    }
+    public List<MemberInterface> searchMember(String keyword){
+        List<MemberInterface> memberList = memberRepository.searchMemberContain(keyword);
+        return memberList;
+    }
+    public void getCurrentMember(){
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(() -> new RuntimeException("Not Match username"));
+        log.info("Got Username: "+username);
     }
 }
