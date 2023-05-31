@@ -30,7 +30,7 @@ public class MessageController {
         sendingOperations.convertAndSend("/direct/room/2023",message);
     }
 
-    @PostMapping("/api/getRoomId/direct")
+    @PostMapping("/api/createRoom")
     @Operation(summary = "1대1 채팅방 생성(임시)", description = "(원래) 1대1 대화를 하고싶은 상대방의 memberId로 해당 유저와의 채팅방 id를 얻는다.")
     public ResponseEntity<String> makeDirectRoom(@RequestBody ChatDto.makeRoomReq req){
         return new ResponseEntity<>(chatService.getDirectRoomId(req), HttpStatus.OK);
