@@ -215,12 +215,5 @@ public class MemberController {
         log.info("got signal in search");
         return memberService.searchMember(keyword);
     }
-    @GetMapping("/getUsername")
-    public String usernameTest(){
-        memberService.getCurrentMember();
-        return "End";
-    }
-
-
 
 }
