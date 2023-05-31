@@ -35,7 +35,8 @@ jobs:
           spring.datasource.password: ${{secrets.DB_PASSWORD}}
           jwt.secretKey : ${{secrets.JWT_SECRET_KEY}}
           jwt.refreshKey : ${{secrets.JWT_SECRET_KEY}}
-
+          
+          
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
