@@ -14,6 +14,10 @@ spring:
       ddl-auto: create
       default-batch-size: 200
     show-sql: true
+  redis:
+    port: 6379
+    host: ${redis.ip}
+    password: ${redis.password}
 jwt:
   header: Authorization
   secretKey: ${jwt.secret}
