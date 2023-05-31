@@ -47,6 +47,7 @@ public class MemberController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody @Valid MemberSignupDto memberSignupDto, BindingResult bindingResult){
+        log.info("Got SignUp Signal");
         if(bindingResult.hasErrors()){
             log.error("binding result 에러");
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
