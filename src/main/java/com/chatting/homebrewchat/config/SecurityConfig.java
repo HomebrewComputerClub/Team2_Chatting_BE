@@ -66,6 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/ws").permitAll()
                         .requestMatchers("/api/chat").permitAll()
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .requestMatchers("/api/hello").permitAll()
                         .anyRequest().authenticated()
                 )
 

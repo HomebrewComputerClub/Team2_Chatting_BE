@@ -2,6 +2,7 @@ package com.chatting.homebrewchat.controller;
 
 import com.chatting.homebrewchat.domain.dto.Login.MemberLoginDto;
 import com.chatting.homebrewchat.domain.dto.Login.MemberLoginResponseDto;
+import com.chatting.homebrewchat.domain.dto.MemberInterface;
 import com.chatting.homebrewchat.domain.dto.Signup.MemberSignupDto;
 import com.chatting.homebrewchat.domain.dto.Signup.MemberSignupResponseDto;
 import com.chatting.homebrewchat.domain.entity.Member;
@@ -28,6 +29,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Slf4j
@@ -128,14 +131,14 @@ public class MemberController {
         //Repository에서 Member를 가져와도 되지만, User~Token을 검사한 authentication의 userdetails에 모든 회원정보가 들어가 있음.
 //        Member member = memberService.findByEmail(memberLoginDto.getEmail());
 
-
+        System.out.println("pt1");
         Details userDetails= (Details) authentication.getPrincipal();
         Member member = userDetails.getMember();
 //        System.out.println(member.toString());
-
+        System.out.println("pt1.5555");
         jwtAuthenticationProvider.setRefreshToken(String.valueOf(member.getMemberId()), refreshToken);
         // Id는 long 형태이므로
-
+        System.out.println("pt22");
         // AccessToken은 헤더의 Authorization 의 Barrer 뒤에 토큰을 붙혀 return 시키기.
         HttpHeaders httpHeaders = memberService.setHeaderAccessToken(accessToken);
         // RefreshToken은 브라우저의 쿠키에 지정하여 보낸다.
@@ -206,7 +209,15 @@ public class MemberController {
 //        "Logout Success",
     }
 
-
+    @GetMapping("/search/{member}")
+    public List<MemberInterface> search(@PathVariable("keyword") String keyword) {
+        return memberService.searchMember(keyword);
+    }
+    @GetMapping("/getUsername")
+    public String usernameTest(){
+        memberService.getCurrentMember();
+        return "End";
+    }
 
 
 
