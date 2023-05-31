@@ -19,6 +19,8 @@ public class webConfig implements WebMvcConfigurer {
                 .allowedOrigins("https://localhost:3000")
                 .allowedOrigins("https://localhost:8080")
                 .allowedOrigins("https://cocobol.site")
+                .allowedOrigins("https://192.168.219.144:3000")
+                .allowedOrigins("https://192.168.219.174:3000")
                 .allowedMethods("GET","POST","PATCH","DELETE","PUT","OPTIONS") // *로 지정해도 상관없을 듯.
                 .allowCredentials(true);
         // 브라우저에서 CORS 요청을 보낼 때 쿠키를 함께 보내야 할 때, 이 메서드를 호출하여 true로 설정합니다.

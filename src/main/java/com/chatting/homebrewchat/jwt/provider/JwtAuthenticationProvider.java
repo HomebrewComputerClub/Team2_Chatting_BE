@@ -38,7 +38,7 @@ public class JwtAuthenticationProvider {
     @Value("${jwt.refreshKey}")
     private byte[] refreshSecret;
 
-    public final static Long ACCESS_TOKEN_EXPIRE_COUNT = 30 * 1000L; // 30 seconds
+    public final static Long ACCESS_TOKEN_EXPIRE_COUNT = 180*2*30 * 1000L; // 30 seconds
     public final static Long REFRESH_TOKEN_EXPIRE_COUNT = 7 * 24 * 60 * 60 * 1000L; // 7 days , 밀리초 단위
     public final static Long REFRESH_TOKEN_EXPIRE_COUNT_REDIS = REFRESH_TOKEN_EXPIRE_COUNT/ 1000; // 1분, 초 단위
 

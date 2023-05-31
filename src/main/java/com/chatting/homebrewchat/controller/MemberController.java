@@ -209,8 +209,9 @@ public class MemberController {
 //        "Logout Success",
     }
 
-    @GetMapping("/search/{member}")
-    public List<MemberInterface> search(@PathVariable("keyword") String keyword) {
+    @GetMapping("/search/{keyword}")
+    public List<MemberInterface> search(@PathVariable String keyword) {
+        log.info("got signal in search");
         return memberService.searchMember(keyword);
     }
     @GetMapping("/getUsername")
