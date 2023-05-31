@@ -16,8 +16,7 @@ spring:
     show-sql: true
   redis:
     port: 6379
-    host: ${redis.ip}
-    password: ${redis.password}
+    host: 127.0.0.1
 jwt:
   header: Authorization
   secretKey: ${jwt.secret}
