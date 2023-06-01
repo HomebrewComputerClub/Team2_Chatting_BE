@@ -41,7 +41,7 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
         String refreshTokenString = provider.getRefreshToken(request);
         String requestURI = request.getRequestURI();
         log.info("Not URI:{}"+requestURI);
-        if(isLoginCheckPath(requestURI)||requestURI.equals("/api/members/logout")){
+//        if(isLoginCheckPath(requestURI)||requestURI.equals("/api/members/logout")){
             if (refreshTokenString != null){
                 try{
                     if(accessTokenString == null){
@@ -109,9 +109,9 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
                     }
                 }
             }
-        }else{
-            log.info("It is white in list");
-        }
+//        }else{
+//            log.info("It is white in list");
+//        }
         filterChain.doFilter(request, response);
         }
 
