@@ -46,12 +46,12 @@ public class MemberController {
     private final RedisUtil redisUtil;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody @Valid MemberSignupDto memberSignupDto, BindingResult bindingResult){
+    public ResponseEntity signup(@RequestBody MemberSignupDto memberSignupDto){
         log.info("Got SignUp Signal");
-        if(bindingResult.hasErrors()){
-            log.error("binding result 에러");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+//        if(bindingResult.hasErrors()){
+//            log.error("binding result 에러");
+//            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+//        }
 
         // 이미 존재하는 이메일인지 검증
         if( memberService.IsPresentEmail(memberSignupDto.getEmail()) ){
@@ -90,10 +90,10 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid MemberLoginDto memberLoginDto, BindingResult bindingResult, HttpServletResponse response){
-        if(bindingResult.hasErrors()){
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity login(@RequestBody MemberLoginDto memberLoginDto, HttpServletResponse response){
+//        if(bindingResult.hasErrors()){
+//            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+//        }
 
         // ----모두 일치하는 경우-----
         UsernamePasswordAuthenticationToken token
