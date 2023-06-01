@@ -27,6 +27,12 @@ public class CustomStompInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        String authorization =(String) accessor.getHeader("Authorization");
+        if(authorization==null){
+            log.info("auth head is null");
+        }else{
+            log.info("HEader : "+authorization);
+        }
         String header = accessor.getFirstNativeHeader("Authorization");
         log.info("in interceptor");
         if(header!=null){
