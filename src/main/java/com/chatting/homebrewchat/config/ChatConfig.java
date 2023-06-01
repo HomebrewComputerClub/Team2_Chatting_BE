@@ -38,13 +38,18 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
+
+        System.out.println("----->>> configureMessageBroker <<<---");
         registry.enableSimpleBroker("/direct", "/multi");
         registry.setApplicationDestinationPrefixes("/pub");
+
+
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         log.info("----->>> configureClientInboundChannel <<<---  ");
+        System.out.println("----->>> configureClientInboundChannel <<<---");
         registration.interceptors(new AuthChannelInterceptorAdapter());
     }
 
@@ -57,6 +62,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
             StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
             log.info("----->>> accessor :{} <<<---  ",accessor);
+            System.out.printf("----->>> accessor : <<<--- ",accessor);
 
             if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                 String token = accessor.getFirstNativeHeader("Authorization");
@@ -70,6 +76,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 //                accessor.setUser(authentication);
 
                 log.info("----->>> token <<<---  {}",token);
+                System.out.println("----->>> token <<<---");
             }
 
             return message;
