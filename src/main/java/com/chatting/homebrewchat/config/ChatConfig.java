@@ -34,10 +34,10 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
         //메세지를 구독자에게 배포하는 경우 /app 하단의 경로로 배달?
         registry.setApplicationDestinationPrefixes("/pub");
     }
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new CustomStompInterceptor());
-    }
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(new CustomStompInterceptor());
+//    }
 
 
 }

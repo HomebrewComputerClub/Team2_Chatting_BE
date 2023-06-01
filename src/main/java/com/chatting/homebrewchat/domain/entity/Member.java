@@ -1,6 +1,5 @@
 package com.chatting.homebrewchat.domain.entity;
 
-import com.chatting.homebrewchat.jwt.UserDetailsToken.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +20,7 @@ public class Member {
     private Long memberId;
 
 //    @Column(unique = true)
+    private String username;
     private String email;
 
     private String name;
@@ -36,23 +36,25 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     // 엔티티 필드에 저장된 Enum 값을 문자열 형태로 데이터베이스에 저장
-    private Role role;
+    private MemberRole role;
 
     // Oauth 관련--------------------
 
 //    // oauth 관련
     private String provider; //어떤 OAuth인지(google, naver 등)
+    private String refreshToken;
 
     @Column(name = "provide_id")
     private String provideId; // 해당 OAuth 의 key(id)
     @Builder
-    public Member(String name, String password, String email, Role role, String provider, String provideId, LocalDateTime regdate) {
+    public Member(String name, String password, String email, String provider, String provideId) {
         this.name = name;
         this.password = password;
         this.email = email;
-        this.role = role;
+        this.role = MemberRole.USER;
         this.provider = provider;
         this.provideId = provideId;
-        this.regdate = regdate;
+        this.regdate = LocalDateTime.now();
+        this.username=email.split("@")[0];
     }
 }
