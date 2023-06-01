@@ -20,6 +20,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+//@Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
     @Transactional
@@ -102,6 +103,8 @@ public class MemberService {
 
     @Transactional
     public String join(MemberSignupDto memberSignupDto) {
+        if(memberRepository.findFirstByEmail(memberSignupDto.getEmail()).orElse(null)!=null)
+            throw new BaseException(BaseResponseStatus.POST_USERS_EXISTS_EMAIL);
         Member member = Member.builder().email(memberSignupDto.getEmail()).password(memberSignupDto.getPassword())
                 .name(memberSignupDto.getName()).build();
         memberRepository.save(member);
