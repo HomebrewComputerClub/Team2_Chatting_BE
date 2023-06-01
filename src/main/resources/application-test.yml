@@ -18,5 +18,5 @@ spring:
     generate-ddl: true
 jwt:
   header: Authorization
-  secretKey: c2lsdmVyfakefakefakefakefakefakefakefakefakefakefakefakefakefakefakeib290LWp3fakefakefakefakefake
-  refreshKey: c2lsdmVyfakefakefakefakefakefakefakefakefakefakefakefakefakefakefakeib290LWp3fakefakefakefakefake
+  secret: c2lsdmVyfakefakefakefakefakefakefakefakefakefakefakefakefakefakefakeib290LWp3fakefakefakefakefake
+  token-validity-in-seconds: 86400
