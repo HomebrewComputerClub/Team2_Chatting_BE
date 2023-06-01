@@ -17,6 +17,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     )
     List<MemberInterface> searchMemberContain(@Param("keyword") String keyword);
 
-    Optional<Member> findByName(String username);
+    Optional<Member> findFirstByName(String username);
 
 }
