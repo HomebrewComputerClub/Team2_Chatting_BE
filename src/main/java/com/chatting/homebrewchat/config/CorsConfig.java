@@ -19,6 +19,8 @@ public class CorsConfig {
       config.setAllowCredentials(true);
       config.setAllowedMethods(List.of(new String[]{"GET", "POST", "PUT", "DELETE", "OPTIONS"}));
       config.addAllowedOrigin("http://localhost:3000");
+      config.addAllowedOrigin("https://localhost:3000");
+      config.addAllowedOrigin("https://cocobol.site");
       config.addAllowedOrigin("http://172.30.1.48:3000");
       config.addAllowedOrigin("http://localhost:8080");
       config.addAllowedOrigin("http://3.34.232.63:3000");
