@@ -1,6 +1,8 @@
 package com.chatting.homebrewchat.config;
 
+import com.chatting.homebrewchat.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -22,6 +24,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 //    private final CustomStompInterceptor customStompInterceptor;
+    @Autowired
+    private TokenProvider tokenProvider;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/ws").setAllowedOrigins("http://localhost:3000","https://localhost:3000","https://localhost:3001",
@@ -35,10 +39,10 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
         //메세지를 구독자에게 배포하는 경우 /app 하단의 경로로 배달?
         registry.setApplicationDestinationPrefixes("/pub");
     }
-//    @Override
-//    public void configureClientInboundChannel(ChannelRegistration registration) {
-//        registration.interceptors(new CustomStompInterceptor());
-//    }
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new CustomStompInterceptor(tokenProvider));
+    }
 
 
 }
