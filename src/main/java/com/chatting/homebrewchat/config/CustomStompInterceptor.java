@@ -29,7 +29,7 @@ public class CustomStompInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String header = accessor.getFirstNativeHeader("Authorization");
         log.info("in interceptor");
-        if(!header.isEmpty()){
+        if(header!=null){
             log.info("Got header : "+header);
             String token = resolveToken(header);
             Authentication authentication = tokenProvider.getAuthentication(token,"ACCESS");
