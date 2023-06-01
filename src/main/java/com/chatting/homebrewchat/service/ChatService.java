@@ -36,7 +36,7 @@ public class ChatService {
 //            throw new RuntimeException("same MemberID..");
 //        }
         log.info("in service");
-        Member me = memberService.getCurrentMember();
+        Member me = memberService.getMember();
 //        Member me = getMember(req.getMyMemberId());
         Member target = getMember(id);
         List<ChatRoom> byMemberA = roomRepository.findByMemberA(me);
@@ -60,7 +60,7 @@ public class ChatService {
     }
     public List<ChatDto.roomListRes> getMyRoomList(){
 //        Member me=getMember(memberId);
-        Member me=memberService.getCurrentMember();
+        Member me=memberService.getMember();
         List<ChatRoom> byMemberA = roomRepository.findByMemberA(me);
         List<ChatRoom> byMemberB = roomRepository.findByMemberB(me);
         List<ChatDto.roomListRes> result = new ArrayList<>();
@@ -83,7 +83,7 @@ public class ChatService {
     }
     @Transactional
     public void saveChatMessage(DirectMessageDto msg){
-        Member currentMember = memberService.getCurrentMember();
+        Member currentMember = memberService.getMember();
         Optional<ChatRoom> byId = roomRepository.findById(msg.getRoomId());
         if(!byId.isPresent()){
             throw new RuntimeException("no room");
