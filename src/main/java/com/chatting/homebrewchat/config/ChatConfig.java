@@ -25,7 +25,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/ws").setAllowedOrigins("http://localhost:3000","https://localhost:3000"
-                ,"http://172.30.1.3:3000","https://192.168.219.144:3000","https://192.168.219.174:3000").setAllowedOriginPatterns("*");
+                ,"http://172.30.1.3:3000","https://192.168.219.144:3000","https://192.168.219.174:3000","https://192.168.0.24:3000").setAllowedOriginPatterns("*");
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry){

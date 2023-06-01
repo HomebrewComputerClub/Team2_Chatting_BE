@@ -215,5 +215,10 @@ public class MemberController {
         log.info("got signal in search");
         return memberService.searchMember(keyword);
     }
+    @GetMapping("/tt")
+    public String tt(){
+        log.info("got ttttt");
+        return "tt";
+    }
 
 }
