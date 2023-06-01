@@ -2,8 +2,10 @@ package com.chatting.homebrewchat.controller;
 
 import com.chatting.homebrewchat.domain.dto.ChatDto;
 import com.chatting.homebrewchat.domain.dto.DirectMessageDto;
+import com.chatting.homebrewchat.domain.dto.MemberInterface;
 import com.chatting.homebrewchat.domain.dto.MessageType;
 import com.chatting.homebrewchat.service.ChatService;
+import com.chatting.homebrewchat.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.util.List;
 public class MessageController {
     private final SimpMessageSendingOperations sendingOperations;
     private final ChatService chatService;
+    private final MemberService memberService;
     @MessageMapping("/message/send/direct")
     public void sendMessage(DirectMessageDto message){
         log.info("Got Message:"+message);
@@ -44,5 +47,10 @@ public class MessageController {
     @Operation(summary = "이전 채팅 기록 조회", description = "1대1 채팅방의 이전 채팅 기록을 조회하는 API")
     public ResponseEntity<ChatDto.messageListInfo> getChatList(@PathVariable String roomId){
         return new ResponseEntity<>(chatService.getDirectMessageList(roomId),HttpStatus.OK);
+    }
+    @GetMapping("/api/search/{keyword}")
+    public List<MemberInterface> search(@PathVariable String keyword) {
+        log.info("got signal in search");
+        return memberService.searchMember(keyword);
     }
 }
