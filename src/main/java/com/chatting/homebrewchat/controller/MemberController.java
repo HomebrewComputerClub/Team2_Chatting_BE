@@ -93,7 +93,8 @@ public class MemberController {
             Cookie cookie = new Cookie("RefreshToken",refreshJwt);
             cookie.setHttpOnly(true);
             cookie.setPath("/");
-            //cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
             response.addCookie(cookie);
 
             return new ResponseEntity<>(accessJwt, httpHeaders, HttpStatus.OK);
