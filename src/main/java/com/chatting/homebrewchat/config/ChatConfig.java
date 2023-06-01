@@ -1,6 +1,9 @@
 package com.chatting.homebrewchat.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import com.chatting.homebrewchat.config.jwt.TokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -20,7 +23,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
-@RequiredArgsConstructor
 public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
@@ -59,9 +61,10 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
                 // If the token is valid, set the user in the security context
                 // This assumes you have a custom UserDetailsService implementation for loading user details
                 // based on the token
-                log.info("------------token : ----------- :{} ",token);
-           //     UsernamePasswordAuthenticationToken authentication = authenticate(token);
-          //      accessor.setUser(authentication);
+//                UsernamePasswordAuthenticationToken authentication = authenticate(token);
+//                accessor.setUser(authentication);
+
+                log.info("----->>> token <<<---  {}",token);
             }
 
             return message;
@@ -73,10 +76,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 //            // Once validated, create and return an Authentication object based on the token
 //
 //            // Example using a custom UserDetailsService to load user details based on the token
-//
-//
-//
-//            UserDetails userDetails = .loadUserByToken(token);
+//            UserDetails userDetails = userDetailsService.loadUserByToken(token);
 //            return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
 //        }
     }
