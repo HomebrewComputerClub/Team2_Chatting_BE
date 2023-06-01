@@ -109,6 +109,8 @@ public class JwtAuthenticationCustomFilter extends OncePerRequestFilter {
                     }
                 }
             }
+        }else{
+            log.info("It is white in list");
         }
         filterChain.doFilter(request, response);
         }

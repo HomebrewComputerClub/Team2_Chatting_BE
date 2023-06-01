@@ -13,9 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,12 +64,21 @@ public class ChatService {
         List<ChatRoom> byMemberA = roomRepository.findByMemberA(me);
         List<ChatRoom> byMemberB = roomRepository.findByMemberB(me);
         List<ChatDto.roomListRes> result = new ArrayList<>();
-//        result.addAll(byMemberA.stream()
-//                .map(cr->ChatDto.roomListRes.builder().roomId(cr.getId()).targetName(cr.getMemberB().getName())
-//                        .targetImage(cr.getMemberB().getPic()).targetMemberId(cr.getMemberB().getMemberId())
-//                        .lastContent(cr.).build())
-//                .collect(Collectors.toList()));
-//        result.addAll(byMemberB.stream().map(ChatRoom::getId).collect(Collectors.toList()));
+        result.addAll(byMemberA.stream()
+                .map(cr->ChatDto.roomListRes.builder().roomId(cr.getId()).targetName(cr.getMemberB().getName())
+                        .targetImage(cr.getMemberB().getPic()).targetMemberId(cr.getMemberB().getMemberId())
+                        .lastContent(cr.getLastMessage().getText()).lastSendTime(cr.getLastMessage().getTime()).build())
+                .collect(Collectors.toList()));
+        result.addAll(byMemberB.stream().map(cr->ChatDto.roomListRes.builder().roomId(cr.getId()).targetName(cr.getMemberA().getName())
+                        .targetImage(cr.getMemberA().getPic()).targetMemberId(cr.getMemberA().getMemberId())
+                        .lastContent(cr.getLastMessage().getText()).lastSendTime(cr.getLastMessage().getTime()).build()
+                ).collect(Collectors.toList()));
+        Collections.sort(result, new Comparator<ChatDto.roomListRes>() {
+            @Override
+            public int compare(ChatDto.roomListRes o1, ChatDto.roomListRes o2) {
+                return o2.getLastSendTime().compareTo(o1.getLastSendTime());
+            }
+        });
         return result;
     }
     @Transactional
@@ -82,12 +90,20 @@ public class ChatService {
         }
         ChatMessage build = ChatMessage.init().text(msg.getDetail()).room(byId.get()).sender(currentMember).build();
         messageRepository.save(build);
+        byId.get().setLastMessage(build);
     }
-    public List<DirectMessageDto> getDirectMessageList(String roomId){
+    public ChatDto.messageListInfo getDirectMessageList(String roomId){
         List<ChatMessage> msgs = messageRepository.findWithSenderByRoom(roomId);
-        return msgs.stream().map(m-> DirectMessageDto.builder().detail(m.getText())
-                .roomId(m.getRoom().getId()).senderName(m.getSender().getName()).messageId(m.getId()).build()
+        Collections.sort(msgs, new Comparator<ChatMessage>() {
+            @Override
+            public int compare(ChatMessage o1, ChatMessage o2) {
+                return o2.getTime().compareTo(o1.getTime());
+            }
+        });
+        List<ChatDto.messageInfo> messageInfoList = msgs.stream().map(m -> ChatDto.messageInfo.builder().detail(m.getText())
+                .senderName(m.getSender().getName()).messageId(m.getId()).build()
         ).collect(Collectors.toList());
+        return ChatDto.messageListInfo.builder().roomId(roomId).messageList(messageInfoList).build();
     }
 
 }

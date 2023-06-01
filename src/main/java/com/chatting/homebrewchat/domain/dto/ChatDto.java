@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ChatDto {
@@ -23,6 +24,20 @@ public class ChatDto {
         private Long targetMemberId;
         private String targetImage;
         private String lastContent;
-        private String lastSendTime;
+        private LocalDateTime lastSendTime;
+    }
+    @Data
+    @Builder
+    public static class messageListInfo{
+        private String roomId;
+        List<messageInfo> messageList;
+    }
+    @Data
+    @Builder
+    public static class messageInfo{
+        private String messageId;
+        //보내는 사람
+        private String senderName;
+        private String detail;
     }
 }
