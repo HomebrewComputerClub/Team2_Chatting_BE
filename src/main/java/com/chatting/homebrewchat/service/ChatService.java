@@ -67,11 +67,11 @@ public class ChatService {
         result.addAll(byMemberA.stream()
                 .map(cr->ChatDto.roomListRes.builder().roomId(cr.getId()).targetName(cr.getMemberB().getName())
                         .targetImage(cr.getMemberB().getPic()).targetMemberId(cr.getMemberB().getMemberId())
-                        .lastContent(cr.getLastMessage().getText()).lastSendTime(cr.getLastMessage().getTime()).build())
+                        .lastContent(cr.getLastMessage()==null?"아직 아무 대화를 나누지 않았어요":cr.getLastMessage().getText()).lastSendTime(cr.getLastMessage()==null?LocalDateTime.now():cr.getLastMessage().getTime()).build())
                 .collect(Collectors.toList()));
         result.addAll(byMemberB.stream().map(cr->ChatDto.roomListRes.builder().roomId(cr.getId()).targetName(cr.getMemberA().getName())
                         .targetImage(cr.getMemberA().getPic()).targetMemberId(cr.getMemberA().getMemberId())
-                        .lastContent(cr.getLastMessage().getText()).lastSendTime(cr.getLastMessage().getTime()).build()
+                        .lastContent(cr.getLastMessage()==null?"아직 아무 대화를 나누지 않았어요":cr.getLastMessage().getText()).lastSendTime(cr.getLastMessage()==null?LocalDateTime.now():cr.getLastMessage().getTime()).build()
                 ).collect(Collectors.toList()));
         Collections.sort(result, new Comparator<ChatDto.roomListRes>() {
             @Override
@@ -94,6 +94,9 @@ public class ChatService {
     }
     public ChatDto.messageListInfo getDirectMessageList(String roomId){
         List<ChatMessage> msgs = messageRepository.findWithSenderByRoom(roomId);
+        if(msgs.isEmpty()){
+            return ChatDto.messageListInfo.builder().roomId(roomId).build();
+        }
         Collections.sort(msgs, new Comparator<ChatMessage>() {
             @Override
             public int compare(ChatMessage o1, ChatMessage o2) {
