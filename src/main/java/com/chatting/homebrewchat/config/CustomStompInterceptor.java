@@ -28,7 +28,9 @@ public class CustomStompInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String header = accessor.getFirstNativeHeader("Authorization");
+        log.info("in interceptor");
         if(!header.isEmpty()){
+            log.info("Got header : "+header);
             String token = resolveToken(header);
             Authentication authentication = tokenProvider.getAuthentication(token,"ACCESS");
             SecurityContextHolder.getContext().setAuthentication(authentication);
