@@ -44,14 +44,19 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
+        log.info("----->>> configureClientInboundChannel <<<---  ");
         registration.interceptors(new AuthChannelInterceptorAdapter());
     }
 
     private class AuthChannelInterceptorAdapter implements ChannelInterceptor {
 
+
+
         @Override
         public Message<?> preSend(Message<?> message, MessageChannel channel) {
             StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+
+            log.info("----->>> accessor :{} <<<---  ",accessor);
 
             if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                 String token = accessor.getFirstNativeHeader("Authorization");
