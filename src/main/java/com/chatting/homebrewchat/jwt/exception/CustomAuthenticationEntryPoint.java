@@ -29,8 +29,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(errorMessage);
         
-        
-        response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE); // 일부러 생소한 에러 - 406에러
+        log.info("entry Point Error");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     // 만료 에러, key 인증 에러
