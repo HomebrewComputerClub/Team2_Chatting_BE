@@ -93,7 +93,8 @@ public class ChatService {
         byId.get().setLastMessage(build);
     }
     public ChatDto.messageListInfo getDirectMessageList(String roomId){
-        List<ChatMessage> msgs = messageRepository.findWithSenderByRoom(roomId);
+        ChatRoom room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("roomID Nono"));
+        List<ChatMessage> msgs = messageRepository.findWithSenderByRoom(room);
         if(msgs.isEmpty()){
             return ChatDto.messageListInfo.builder().roomId(roomId).build();
         }

@@ -2,6 +2,7 @@ package com.chatting.homebrewchat.controller;
 
 import com.chatting.homebrewchat.domain.dto.ChatDto;
 import com.chatting.homebrewchat.domain.dto.DirectMessageDto;
+import com.chatting.homebrewchat.domain.dto.MessageType;
 import com.chatting.homebrewchat.service.ChatService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,9 @@ public class MessageController {
     @MessageMapping("/message/send/direct")
     public void sendMessage(DirectMessageDto message){
         log.info("Got Message:"+message);
-        chatService.saveChatMessage(message);
-//        message.setDetail(message.getDetail()+", 서버에서 확인");
+        if(message.getType().equals(MessageType.SEND)){
+            chatService.saveChatMessage(message);
+        }
         sendingOperations.convertAndSend("/direct/room/"+message.getRoomId(),message);
     }
 
