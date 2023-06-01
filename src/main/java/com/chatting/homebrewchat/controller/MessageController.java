@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("/api")
 @Slf4j
 public class MessageController {
     private final SimpMessageSendingOperations sendingOperations;
@@ -25,8 +24,7 @@ public class MessageController {
     public void sendMessage(DirectMessageDto message){
         log.info("Got Message:"+message);
         chatService.saveChatMessage(message);
-        message.setDetail(message.getDetail()+", 서버에서 확인");
-//        sendingOperations.convertAndSend("/direct/room/"+message.getRoomId(),message);
+//        message.setDetail(message.getDetail()+", 서버에서 확인");
         sendingOperations.convertAndSend("/direct/room/"+message.getRoomId(),message);
     }
 
@@ -42,7 +40,7 @@ public class MessageController {
     }
     @GetMapping("/api/getChatList/{roomId}")
     @Operation(summary = "이전 채팅 기록 조회", description = "1대1 채팅방의 이전 채팅 기록을 조회하는 API")
-    public ResponseEntity<List<DirectMessageDto>> getChatList(@PathVariable String roomId){
+    public ResponseEntity<ChatDto.messageListInfo> getChatList(@PathVariable String roomId){
         return new ResponseEntity<>(chatService.getDirectMessageList(roomId),HttpStatus.OK);
     }
 }

@@ -21,7 +21,9 @@ public class ChatRoom {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String title;
-    private LocalDateTime lastSendTime;
+    @OneToOne
+    @JoinColumn(name = "last_message_id")
+    private ChatMessage lastMessage;
 
     @ManyToOne
     @JoinColumn(name = "member_a_id")
