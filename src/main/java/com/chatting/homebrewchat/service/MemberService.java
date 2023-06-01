@@ -1,8 +1,10 @@
 package com.chatting.homebrewchat.service;
 
 import com.chatting.homebrewchat.domain.dto.MemberInterface;
+import com.chatting.homebrewchat.domain.dto.Signup.MemberSignupDto;
 import com.chatting.homebrewchat.domain.entity.Member;
-import com.chatting.homebrewchat.jwt.util.RedisUtil;
+import com.chatting.homebrewchat.errorHandler.BaseException;
+import com.chatting.homebrewchat.errorHandler.BaseResponseStatus;
 import com.chatting.homebrewchat.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +22,6 @@ import java.util.Optional;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final RedisUtil redisUtil;
-
     @Transactional
     public Member findByEmail(String email){
         return memberRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
@@ -35,11 +35,6 @@ public class MemberService {
         } else {
             return false;
         }
-    }
-
-    @Transactional
-    public Member addMember(Member member){
-        return memberRepository.save(member);
     }
 
     @Transactional
@@ -64,13 +59,6 @@ public class MemberService {
                 .build();
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
-    }
-
-    @Transactional
-    public void checkAndDeleteRefresh(String Id){
-        String memberId = redisUtil.getData(Id);
-        // 찾지 못할 시, RuntimeException 발생
-        redisUtil.deleteData(Id);
     }
 
     @Transactional
@@ -99,5 +87,34 @@ public class MemberService {
         log.info("Got Username: "+username);
         Member member = memberRepository.findFirstByName(username).orElseThrow(() -> new RuntimeException("Cannot find member"));
         return member;
+    }
+    public Member getMember() {
+        String userName = SecurityUtil.getCurrentUsername().orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
+        Member user = memberRepository.findFirstByUsername(userName).orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
+        return user;
+    }
+
+    @Transactional
+    public void deleteRefresh() {
+        Member user = getMember();
+        user.setRefreshToken("");
+    }
+
+    @Transactional
+    public String join(MemberSignupDto memberSignupDto) {
+        Member member = Member.builder().email(memberSignupDto.getEmail()).password(memberSignupDto.getPassword())
+                .name(memberSignupDto.getName()).build();
+        memberRepository.save(member);
+        return memberSignupDto.getName();
+
+    }
+    public String getUserNameByEmail(String email) {
+        Member member = memberRepository.findFirstByEmail(email).orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_EMAIL));
+        return member.getUsername();
+    }
+    @Transactional
+    public void setRefreshToken(String username,String refreshJwt) {
+        Member member = memberRepository.findFirstByUsername(username).orElseThrow(() -> new BaseException(BaseResponseStatus.FAILED_TO_LOGIN));
+        member.setRefreshToken(refreshJwt);
     }
 }

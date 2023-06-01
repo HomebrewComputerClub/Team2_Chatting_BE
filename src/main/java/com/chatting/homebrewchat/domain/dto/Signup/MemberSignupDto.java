@@ -1,9 +1,6 @@
 package com.chatting.homebrewchat.domain.dto.Signup;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
@@ -19,6 +16,7 @@ public class MemberSignupDto {
 //    @NotEmpty
 //    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{7,16}$",
 //            message = "비밀번호는 영문+숫자+특수문자를 포함한 8~20자이어야 합니다.")
+    @Setter
     private String password;
 
 //    @NotEmpty
