@@ -53,6 +53,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers("/api/members/**").permitAll()
                 .requestMatchers("/api/ws").permitAll()
+                .requestMatchers("/api/ws/**").permitAll()
+                .requestMatchers("/api/chat").permitAll()
                 //.requestMatchers(PathRequest.toH2Console()).permitAll()
                 .anyRequest().authenticated()
                 .and().apply(new JwtSecurityConfig(tokenProvider))

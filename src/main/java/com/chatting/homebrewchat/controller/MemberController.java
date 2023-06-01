@@ -115,11 +115,7 @@ public class MemberController {
 
 
 
-    @GetMapping("/search/{keyword}")
-    public List<MemberInterface> search(@PathVariable String keyword) {
-        log.info("got signal in search");
-        return memberService.searchMember(keyword);
-    }
+
     @GetMapping("/tt")
     public String tt(){
         log.info("got ttttt");
