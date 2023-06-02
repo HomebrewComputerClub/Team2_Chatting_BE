@@ -15,6 +15,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,12 @@ public class MessageController {
     private final ChatService chatService;
     private final MemberService memberService;
     @MessageMapping("/message/send/direct")
-    public void sendMessage(DirectMessageDto message){
+    public void sendMessage(DirectMessageDto message, Principal principal){
+        if(principal==null){
+            log.info("principal is null");
+        }else {
+            log.info("principal info"+principal.getName());
+        }
         log.info("Got Message:"+message);
         if(message.getType().equals(MessageType.SEND)){
             chatService.saveChatMessage(message);
