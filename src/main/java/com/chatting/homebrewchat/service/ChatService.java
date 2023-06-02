@@ -163,8 +163,16 @@ public class ChatService {
         if(!byId.isPresent()){
             throw new RuntimeException("no room");
         }
-        ChatMessage build = ChatMessage.groupInit().text(message.getDetail()).room(byId.get()).sender(currentMember).build();
+        ChatMessage build = ChatMessage.groupInit().text(message.getDetail()).groupChatRoom(byId.get()).sender(currentMember).build();
         messageRepository.save(build);
         byId.get().setLastMessage(build);
+    }
+
+    @Transactional
+    public void inviteMemberToGroup(Long memberId, String roomId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_USERID));
+        GroupChatRoom groupChatRoom = groupChatRoomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("invalid group room id"));
+        MemberGroupRoom build = MemberGroupRoom.init().member(member).groupChatRoom(groupChatRoom).build();
+        memberGroupRoomRepository.save(build);
     }
 }

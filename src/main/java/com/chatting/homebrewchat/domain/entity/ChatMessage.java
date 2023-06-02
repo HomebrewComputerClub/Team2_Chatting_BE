@@ -44,12 +44,12 @@ public class ChatMessage {
         this.time=LocalDateTime.now();
     }
     @Builder(builderMethodName = "groupInit")
-    public ChatMessage(String text, GroupChatRoom room, Member sender){
+    public ChatMessage(String text, GroupChatRoom groupChatRoom, Member sender){
         this.text=text;
-        this.groupChatRoom=room;
+        this.groupChatRoom=groupChatRoom;
         this.sender=sender;
         this.time=LocalDateTime.now();
-        room.getMessageList().add(this);
+        groupChatRoom.getMessageList().add(this);
     }
 
 }
