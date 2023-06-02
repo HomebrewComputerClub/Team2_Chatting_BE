@@ -40,4 +40,15 @@ public class ChatDto {
         private String senderName;
         private String detail;
     }
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class groupRoomRes{
+        private String roomId;
+        private String roomTitle;
+        private String targetImage;
+        private String lastContent;
+        private LocalDateTime lastSendTime;
+    }
 }

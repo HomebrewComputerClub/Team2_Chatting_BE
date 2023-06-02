@@ -29,6 +29,10 @@ public class ChatMessage {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ChatRoom room;
     @ManyToOne
+    @JoinColumn(name = "group_room_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private GroupChatRoom groupChatRoom;
+    @ManyToOne
     @JoinColumn(name = "sender_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member sender;
@@ -38,6 +42,14 @@ public class ChatMessage {
         this.room=room;
         this.sender=sender;
         this.time=LocalDateTime.now();
+    }
+    @Builder(builderMethodName = "groupInit")
+    public ChatMessage(String text, GroupChatRoom room, Member sender){
+        this.text=text;
+        this.groupChatRoom=room;
+        this.sender=sender;
+        this.time=LocalDateTime.now();
+        room.getMessageList().add(this);
     }
 
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GroupChatRoom {
     @Id
-    @Column(name = "room_id")
+    @Column(name = "group_room_id")
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
@@ -28,7 +28,7 @@ public class GroupChatRoom {
     @OneToMany(mappedBy = "groupChatRoom")
     private List<MemberGroupRoom> memberGroupRoomList=new ArrayList<>();
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "groupChatRoom")
     private List<ChatMessage> messageList=new ArrayList<>();
     @Builder(builderMethodName = "init")
     public GroupChatRoom(String title){
