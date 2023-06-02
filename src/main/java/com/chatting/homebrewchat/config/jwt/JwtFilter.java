@@ -44,11 +44,11 @@ public class JwtFilter extends GenericFilterBean {
         if(httpServletRequest.getCookies()!=null){
             Cookie[] cookies = httpServletRequest.getCookies();
             logger.info("cookies.length = " + cookies.length);
-            for (Cookie cookie : cookies) {
-                logger.info("cookie = " + cookie);
-                logger.info("cookie.getName() = " + cookie.getName());
-                logger.info("cookie.getValue() = " + cookie.getValue());
-            }
+//            for (Cookie cookie : cookies) {
+//                logger.info("cookie = " + cookie);
+//                logger.info("cookie.getName() = " + cookie.getName());
+//                logger.info("cookie.getValue() = " + cookie.getValue());
+//            }
         }
         if(isLoginCheckPath(requestURI)||requestURI.equals("/api/members/logout")){
             //AccessToken이 있고 유효한 경우 OK

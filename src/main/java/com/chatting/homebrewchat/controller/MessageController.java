@@ -45,7 +45,7 @@ public class MessageController {
     }
     @GetMapping("/api/getChatList/{roomId}")
     @Operation(summary = "이전 채팅 기록 조회", description = "1대1 채팅방의 이전 채팅 기록을 조회하는 API")
-    public ResponseEntity<ChatDto.messageListInfo> getChatList(@PathVariable String roomId){
+    public ResponseEntity<List<DirectMessageDto>> getChatList(@PathVariable String roomId){
         return new ResponseEntity<>(chatService.getDirectMessageList(roomId),HttpStatus.OK);
     }
     @GetMapping("/api/search/{keyword}")

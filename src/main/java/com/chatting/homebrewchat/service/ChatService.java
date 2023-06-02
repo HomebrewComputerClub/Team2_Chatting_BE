@@ -5,6 +5,8 @@ import com.chatting.homebrewchat.domain.dto.DirectMessageDto;
 import com.chatting.homebrewchat.domain.entity.ChatMessage;
 import com.chatting.homebrewchat.domain.entity.ChatRoom;
 import com.chatting.homebrewchat.domain.entity.Member;
+import com.chatting.homebrewchat.errorHandler.BaseException;
+import com.chatting.homebrewchat.errorHandler.BaseResponseStatus;
 import com.chatting.homebrewchat.repository.MemberRepository;
 import com.chatting.homebrewchat.repository.MessageRepository;
 import com.chatting.homebrewchat.repository.RoomRepository;
@@ -37,6 +39,7 @@ public class ChatService {
 //        }
         log.info("in service");
         Member me = memberService.getMember();
+
 //        Member me = getMember(req.getMyMemberId());
         Member target = getMember(id);
         List<ChatRoom> byMemberA = roomRepository.findByMemberA(me);
@@ -83,7 +86,16 @@ public class ChatService {
     }
     @Transactional
     public void saveChatMessage(DirectMessageDto msg){
-        Member currentMember = memberService.getMember();
+        Member currentMember;
+        try {
+            currentMember = memberService.getMember();
+            log.info("Find Member By Security");
+        }catch (Exception e){
+            log.info("Cannot Find Member");
+        }finally {
+            currentMember=memberRepository.findById(msg.getMemberId()).orElseThrow(()->new BaseException(BaseResponseStatus.INVALID_USERID));
+        }
+
         Optional<ChatRoom> byId = roomRepository.findById(msg.getRoomId());
         if(!byId.isPresent()){
             throw new RuntimeException("no room");
@@ -92,11 +104,11 @@ public class ChatService {
         messageRepository.save(build);
         byId.get().setLastMessage(build);
     }
-    public ChatDto.messageListInfo getDirectMessageList(String roomId){
+    public List<DirectMessageDto> getDirectMessageList(String roomId){
         ChatRoom room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("roomID Nono"));
         List<ChatMessage> msgs = messageRepository.findWithSenderByRoom(room);
         if(msgs.isEmpty()){
-            return ChatDto.messageListInfo.builder().roomId(roomId).build();
+            return Collections.singletonList(DirectMessageDto.builder().build());
         }
         Collections.sort(msgs, new Comparator<ChatMessage>() {
             @Override
@@ -104,10 +116,10 @@ public class ChatService {
                 return o2.getTime().compareTo(o1.getTime());
             }
         });
-        List<ChatDto.messageInfo> messageInfoList = msgs.stream().map(m -> ChatDto.messageInfo.builder().detail(m.getText())
-                .senderName(m.getSender().getName()).messageId(m.getId()).build()
+        List<DirectMessageDto> messageInfoList = msgs.stream().map(m -> DirectMessageDto.builder().detail(m.getText())
+                .senderName(m.getSender().getName()).messageId(m.getId()).memberId(m.getSender().getMemberId()).build()
         ).collect(Collectors.toList());
-        return ChatDto.messageListInfo.builder().roomId(roomId).messageList(messageInfoList).build();
+        return messageInfoList;
     }
 
 }

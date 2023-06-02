@@ -44,7 +44,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
                         "https://cocobol.site", "http://172.30.1.3:3000",
                         "https://192.168.219.144:3000", "https://192.168.219.174:3000", "https://192.168.0.24:3000",
                         "https://192.168.219.103:3000")
-                .setAllowedOriginPatterns("*");
+                .setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
