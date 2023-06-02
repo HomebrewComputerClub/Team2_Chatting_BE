@@ -114,7 +114,7 @@ public class ChatService {
         Collections.sort(msgs, new Comparator<ChatMessage>() {
             @Override
             public int compare(ChatMessage o1, ChatMessage o2) {
-                return o2.getTime().compareTo(o1.getTime());
+                return o1.getTime().compareTo(o2.getTime());
             }
         });
         List<DirectMessageDto> messageInfoList = msgs.stream().map(m -> DirectMessageDto.builder().detail(m.getText())
@@ -124,4 +124,8 @@ public class ChatService {
         return messageInfoList;
     }
 
+//    public String createGroupRoom() {
+//
+//
+//    }
 }
