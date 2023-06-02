@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class JwtFilter extends GenericFilterBean {
-    private static final String[] whiteList={"/","/api/members/*","/css/*","/api/ws",
+    private static final String[] whiteList={"/","/api/members/*","/css/*","/api/ws","/api/ws/*",
             "/h2-console/*","/swagger-ui/*","/swagger-resources/*","/swagger-resources",
             "/swagger-ui","/swagger-ui.html","/v3/api-docs/*","/v3/api-docs","/h2-console","/h2-console/*","/category/*"
     };
