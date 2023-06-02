@@ -38,6 +38,20 @@ public class MessageController {
         }
         sendingOperations.convertAndSend("/direct/room/"+message.getRoomId(),message);
     }
+    @MessageMapping("/message/send/group")
+    public void sendGroupMessage(DirectMessageDto message, Principal principal){
+        if(principal==null){
+            log.info("principal is null");
+        }else {
+            log.info("principal info"+principal.getName());
+        }
+        log.info("Got Message:"+message);
+        if(message.getType().equals(MessageType.SEND)){
+            chatService.saveGroupMessage(message);
+        }
+        sendingOperations.convertAndSend("/group/room/"+message.getRoomId(),message);
+    }
+
 
     @PostMapping("/api/createRoom/{id}")
     @Operation(summary = "1대1 채팅방 생성(임시)", description = "(원래) 1대1 대화를 하고싶은 상대방의 memberId로 해당 유저와의 채팅방 id를 얻는다.")
@@ -65,8 +79,12 @@ public class MessageController {
     }
     @GetMapping("/api/getRoomList/group")
     @Operation(summary = "자신의 1대1 채팅방 목록 조회", description = "1대1 채팅방 목록을 조히(인증 도입 후엔 memberId를 받지 않는다.)")
-    public ResponseEntity<List<ChatDto.roomListRes>> getMyGroupRoom(){
-        return new ResponseEntity<>(chatService.getMyRoomList(),HttpStatus.OK);
+    public ResponseEntity<List<ChatDto.groupRoomRes>> getMyGroupRoom(){
+        return new ResponseEntity<>(chatService.getMyGroupRoomList(),HttpStatus.OK);
+    }
+    @GetMapping("/api/getChatList/group/{roomId}")
+    public ResponseEntity<List<DirectMessageDto>> getGroupChatList(@PathVariable String roomId){
+        return new ResponseEntity<>(chatService.getGroupMessageList(roomId),HttpStatus.OK);
     }
 
 }

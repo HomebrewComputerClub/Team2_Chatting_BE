@@ -51,7 +51,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         logger.info("----->>> configureMessageBroker  발행<<<---");
         System.out.println("----->>> configureMessageBroker <<<---");
-        registry.enableSimpleBroker("/direct", "/multi");
+        registry.enableSimpleBroker("/direct", "/group");
         registry.setApplicationDestinationPrefixes("/pub");
 
 

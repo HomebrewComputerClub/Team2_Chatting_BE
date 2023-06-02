@@ -131,12 +131,40 @@ public class ChatService {
         memberGroupRoomRepository.save(build);
         return groupChatRoom.getId();
     }
-//    public List<ChatDto.roomListRes> getMyGroupRoomList(){
-//        Member member = memberService.getMember();
-//        List<MemberGroupRoom> groupRoomList = memberGroupRoomRepository.findWithGroupChatRoomByMember(member);
-//        groupRoomList.stream().map(r->ChatDto.roomListRes.builder().roomId(r.getGroupChatRoom().getId())
-//
-//        )
-//
-//    }
+    public List<ChatDto.groupRoomRes> getMyGroupRoomList(){
+        Member member = memberService.getMember();
+        List<MemberGroupRoom> groupRoomList = memberGroupRoomRepository.findWithGroupChatRoomByMember(member);
+        return groupRoomList.stream().map(r->ChatDto.groupRoomRes.builder().roomId(r.getGroupChatRoom().getId())
+                .roomTitle(r.getGroupChatRoom().getTitle()).targetImage(member.getPic())
+                .lastContent(r.getGroupChatRoom().getLastMessage().getText())
+                .lastSendTime(r.getGroupChatRoom().getLastMessage().getTime()).build()
+        ).collect(Collectors.toList());
+    }
+
+    public List<DirectMessageDto> getGroupMessageList(String roomId) {
+        GroupChatRoom groupChatRoom = groupChatRoomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("invalid group room id"));
+        List<ChatMessage> messageList = messageRepository.findWithSenderByGroupChatRoom(groupChatRoom);
+        Collections.sort(messageList, new Comparator<ChatMessage>() {
+            @Override
+            public int compare(ChatMessage o1, ChatMessage o2) {
+                return o1.getTime().compareTo(o2.getTime());
+            }
+        });
+        return messageList.stream().map(m->DirectMessageDto.builder().detail(m.getText())
+                .senderName(m.getSender().getName()).messageId(m.getId()).memberId(m.getSender().getMemberId())
+                .roomId(roomId).type(MessageType.SEND).build()
+        ).collect(Collectors.toList());
+
+    }
+    @Transactional
+    public void saveGroupMessage(DirectMessageDto message) {
+        Member currentMember=memberRepository.findById(message.getMemberId()).orElseThrow(()->new BaseException(BaseResponseStatus.INVALID_USERID));
+        Optional<GroupChatRoom> byId = groupChatRoomRepository.findById(message.getRoomId());
+        if(!byId.isPresent()){
+            throw new RuntimeException("no room");
+        }
+        ChatMessage build = ChatMessage.groupInit().text(message.getDetail()).room(byId.get()).sender(currentMember).build();
+        messageRepository.save(build);
+        byId.get().setLastMessage(build);
+    }
 }
