@@ -117,7 +117,8 @@ public class ChatService {
             }
         });
         List<DirectMessageDto> messageInfoList = msgs.stream().map(m -> DirectMessageDto.builder().detail(m.getText())
-                .senderName(m.getSender().getName()).messageId(m.getId()).memberId(m.getSender().getMemberId()).build()
+                .senderName(m.getSender().getName()).messageId(m.getId()).memberId(m.getSender().getMemberId())
+                .roomId(roomId).build()
         ).collect(Collectors.toList());
         return messageInfoList;
     }
