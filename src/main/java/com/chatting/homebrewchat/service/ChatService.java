@@ -2,6 +2,7 @@ package com.chatting.homebrewchat.service;
 
 import com.chatting.homebrewchat.domain.dto.ChatDto;
 import com.chatting.homebrewchat.domain.dto.DirectMessageDto;
+import com.chatting.homebrewchat.domain.dto.MessageType;
 import com.chatting.homebrewchat.domain.entity.ChatMessage;
 import com.chatting.homebrewchat.domain.entity.ChatRoom;
 import com.chatting.homebrewchat.domain.entity.Member;
@@ -118,7 +119,7 @@ public class ChatService {
         });
         List<DirectMessageDto> messageInfoList = msgs.stream().map(m -> DirectMessageDto.builder().detail(m.getText())
                 .senderName(m.getSender().getName()).messageId(m.getId()).memberId(m.getSender().getMemberId())
-                .roomId(roomId).build()
+                .roomId(roomId).type(MessageType.SEND).build()
         ).collect(Collectors.toList());
         return messageInfoList;
     }
