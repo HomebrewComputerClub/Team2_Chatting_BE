@@ -131,4 +131,12 @@ public class ChatService {
         memberGroupRoomRepository.save(build);
         return groupChatRoom.getId();
     }
+//    public List<ChatDto.roomListRes> getMyGroupRoomList(){
+//        Member member = memberService.getMember();
+//        List<MemberGroupRoom> groupRoomList = memberGroupRoomRepository.findWithGroupChatRoomByMember(member);
+//        groupRoomList.stream().map(r->ChatDto.roomListRes.builder().roomId(r.getGroupChatRoom().getId())
+//
+//        )
+//
+//    }
 }
