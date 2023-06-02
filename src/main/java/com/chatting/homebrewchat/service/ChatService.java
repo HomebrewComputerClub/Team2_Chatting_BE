@@ -3,14 +3,10 @@ package com.chatting.homebrewchat.service;
 import com.chatting.homebrewchat.domain.dto.ChatDto;
 import com.chatting.homebrewchat.domain.dto.DirectMessageDto;
 import com.chatting.homebrewchat.domain.dto.MessageType;
-import com.chatting.homebrewchat.domain.entity.ChatMessage;
-import com.chatting.homebrewchat.domain.entity.ChatRoom;
-import com.chatting.homebrewchat.domain.entity.Member;
+import com.chatting.homebrewchat.domain.entity.*;
 import com.chatting.homebrewchat.errorHandler.BaseException;
 import com.chatting.homebrewchat.errorHandler.BaseResponseStatus;
-import com.chatting.homebrewchat.repository.MemberRepository;
-import com.chatting.homebrewchat.repository.MessageRepository;
-import com.chatting.homebrewchat.repository.RoomRepository;
+import com.chatting.homebrewchat.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +25,8 @@ public class ChatService {
     private final RoomRepository roomRepository;
     private final MessageRepository messageRepository;
     private final MemberService memberService;
+    private final GroupChatRoomRepository groupChatRoomRepository;
+    private final MemberGroupRoomRepository memberGroupRoomRepository;
 
     private Member getMember(Long id){
         return memberRepository.findById(id).orElseThrow(()->new RuntimeException("no mem"));
@@ -124,8 +122,13 @@ public class ChatService {
         return messageInfoList;
     }
 
-//    public String createGroupRoom() {
-//
-//
-//    }
+    @Transactional
+    public String createGroupRoom(String title) {
+        Member member = memberService.getMember();
+        GroupChatRoom groupChatRoom = GroupChatRoom.init().title(title).build();
+        MemberGroupRoom build = MemberGroupRoom.init().member(member).groupChatRoom(groupChatRoom).build();
+        groupChatRoomRepository.save(groupChatRoom);
+        memberGroupRoomRepository.save(build);
+        return groupChatRoom.getId();
+    }
 }

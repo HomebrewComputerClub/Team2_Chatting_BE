@@ -59,4 +59,8 @@ public class MessageController {
         log.info("got signal in search");
         return memberService.searchMember(keyword);
     }
+    @PostMapping("/api/createGroupRoom/{title}")
+    public ResponseEntity<String> makeGroupRoom(@PathVariable String title){
+        return new ResponseEntity<>(chatService.createGroupRoom(title),HttpStatus.OK);
+    }
 }
