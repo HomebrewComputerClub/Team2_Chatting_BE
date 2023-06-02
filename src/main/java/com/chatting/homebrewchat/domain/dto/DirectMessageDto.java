@@ -14,4 +14,5 @@ public class DirectMessageDto {
     //보내는 사람
     private String senderName;
     private String detail;
+    private Long memberId;
 }
