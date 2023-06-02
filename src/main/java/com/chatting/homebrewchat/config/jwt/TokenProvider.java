@@ -61,8 +61,12 @@ public class TokenProvider implements InitializingBean {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-
+        Member member = userRepository.findFirstByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("Cannot find user"));
         long now = (new Date()).getTime();
+        Claims claims=Jwts.claims().setSubject(authentication.getName());
+        claims.put("name",member.getName());
+        claims.put("userId",member.getMemberId());
+        claims.put("username",member.getUsername());
         if(type.equals("Access")){
             now+=this.accessTokenValidityMs;
             Date validity = new Date(now);
@@ -70,6 +74,7 @@ public class TokenProvider implements InitializingBean {
             String compact = Jwts.builder()
                     .setSubject(authentication.getName())
                     .claim(AUTHORITIES_KEY, authorities)
+                    .addClaims(claims)
                     .signWith(key, SignatureAlgorithm.HS512)
                     .setExpiration(validity)
                     .compact();
@@ -82,6 +87,7 @@ public class TokenProvider implements InitializingBean {
             log.info("authentication name : "+authentication.getName());
             return Jwts.builder()
                     .setSubject(authentication.getName())
+                    .addClaims(claims)
                     .signWith(key, SignatureAlgorithm.HS512)
                     .setExpiration(validity)
                     .compact();
