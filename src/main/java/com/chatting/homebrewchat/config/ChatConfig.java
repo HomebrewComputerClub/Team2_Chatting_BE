@@ -1,10 +1,15 @@
 package com.chatting.homebrewchat.config;
+import com.chatting.homebrewchat.config.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.chatting.homebrewchat.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -25,8 +30,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatConfig.class);
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+
+        System.out.println("----->>> registerStompEndpoints <<<---");
+        logger.info("----->>> registerStompEndpoints  구독<<<---");
         registry.addEndpoint("/api/ws")
                 .setAllowedOrigins("http://localhost:3000", "https://localhost:3000", "https://localhost:3001",
                         "https://cocobol.site", "http://172.30.1.3:3000",
@@ -38,7 +48,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-
+        logger.info("----->>> configureMessageBroker  발행<<<---");
         System.out.println("----->>> configureMessageBroker <<<---");
         registry.enableSimpleBroker("/direct", "/multi");
         registry.setApplicationDestinationPrefixes("/pub");
@@ -46,50 +56,5 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
 
     }
 
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        log.info("----->>> configureClientInboundChannel <<<---  ");
-        System.out.println("----->>> configureClientInboundChannel <<<---");
-        registration.interceptors(new AuthChannelInterceptorAdapter());
+
     }
-
-    private class AuthChannelInterceptorAdapter implements ChannelInterceptor {
-
-
-
-        @Override
-        public Message<?> preSend(Message<?> message, MessageChannel channel) {
-            StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-
-            log.info("----->>> accessor :{} <<<---  ",accessor);
-            System.out.printf("----->>> accessor : <<<--- ",accessor);
-
-            if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                String token = accessor.getFirstNativeHeader("Authorization");
-                // Validate and authenticate the token here
-                // You can use your JWT token validation logic here
-
-                // If the token is valid, set the user in the security context
-                // This assumes you have a custom UserDetailsService implementation for loading user details
-                // based on the token
-//                UsernamePasswordAuthenticationToken authentication = authenticate(token);
-//                accessor.setUser(authentication);
-
-                log.info("----->>> token <<<---  {}",token);
-                System.out.println("----->>> token <<<---");
-            }
-
-            return message;
-        }
-
-//        private UsernamePasswordAuthenticationToken authenticate(String token) {
-//            // Implement your token validation and authentication logic here
-//            // You can use libraries like jjwt or Nimbus JOSE + JWT for token validation
-//            // Once validated, create and return an Authentication object based on the token
-//
-//            // Example using a custom UserDetailsService to load user details based on the token
-//            UserDetails userDetails = userDetailsService.loadUserByToken(token);
-//            return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
-//        }
-    }
-}
