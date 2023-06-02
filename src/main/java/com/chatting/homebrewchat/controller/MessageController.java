@@ -86,5 +86,9 @@ public class MessageController {
     public ResponseEntity<List<DirectMessageDto>> getGroupChatList(@PathVariable String roomId){
         return new ResponseEntity<>(chatService.getGroupMessageList(roomId),HttpStatus.OK);
     }
-
+    @PostMapping("/api/groupChat/inviteMember")
+    public ResponseEntity<String> inviteMemberToGroup(@RequestBody ChatDto.inviteMemberReq req){
+        chatService.inviteMemberToGroup(req.getMemberId(),req.getRoomId());
+        return new ResponseEntity<>("invite member to group room",HttpStatus.OK);
+    }
 }

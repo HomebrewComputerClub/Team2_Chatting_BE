@@ -51,4 +51,10 @@ public class ChatDto {
         private String lastContent;
         private LocalDateTime lastSendTime;
     }
+    @Data
+    @Builder
+    public static class inviteMemberReq{
+        private Long memberId;
+        private String roomId;
+    }
 }
